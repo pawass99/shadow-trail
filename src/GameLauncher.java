@@ -16,10 +16,6 @@ public class GameLauncher {
     private LevelBoardPanel levelBoardPanel;
     private GameplayPanel gameplayPanel;
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new GameLauncher().initWindow());
-    }
-
     public GameLauncher() {
         DatabaseManager databaseManager = new DatabaseManager(); // stubbed for now
         this.userManager = new UserManager(databaseManager);
@@ -38,7 +34,7 @@ public class GameLauncher {
         UIManager.put("OptionPane.buttonFont", itim);
     }
 
-    private void initWindow() {
+    public void initWindow() {
         frame = new JFrame("ShadowTrail");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1280, 720);
