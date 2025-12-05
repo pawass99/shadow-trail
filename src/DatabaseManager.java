@@ -4,8 +4,8 @@ import java.sql.SQLException;
 
 public class DatabaseManager {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/shadowtrail";
-    private static final String USER = "pwstile";
-    private static final String PASS = "pawas";
+    private static final String USER = "root";
+    private static final String PASS = "";
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
     public DatabaseManager() {
