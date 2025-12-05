@@ -9,6 +9,7 @@ public class GameLauncher {
 
     private final UserManager userManager;
     private final LevelManager levelManager;
+    private final AudioManager audioManager;
 
     private MainMenuPanel mainMenuPanel;
     private NewGamePanel newGamePanel;
@@ -21,6 +22,7 @@ public class GameLauncher {
         DatabaseManager databaseManager = new DatabaseManager();
         this.userManager = new UserManager(databaseManager);
         this.levelManager = new LevelManager(databaseManager);
+        this.audioManager = new AudioManager();
         applyGlobalFont();
     }
 
@@ -70,22 +72,26 @@ public class GameLauncher {
 
     public void showMainMenu() {
         cardLayout.show(rootPanel, "mainMenu");
+        audioManager.playMenuMusic();
     }
 
     public void showNewGame() {
         newGamePanel.refreshUsers();
         cardLayout.show(rootPanel, "newGame");
+        audioManager.playMenuMusic();
     }
 
     public void showContinue() {
         continuePanel.refreshUsers();
         cardLayout.show(rootPanel, "continue");
+        audioManager.playMenuMusic();
     }
 
     public void showLevelBoard(User user) {
         this.currentUser = user;
         levelBoardPanel.setActiveUser(user);
         cardLayout.show(rootPanel, "levelBoard");
+        audioManager.playMenuMusic();
     }
 
     public void showLevelBoardCurrent() {
@@ -108,9 +114,11 @@ public class GameLauncher {
     public void showLeaderboard() {
         leaderboardPanel.refreshLeaderboard();
         cardLayout.show(rootPanel, "leaderboard");
+        audioManager.playMenuMusic();
     }
 
     public void startGameplay(LevelConfig config, int roundCount) {
+        audioManager.stopMusic();
         if (currentUser == null) {
             JOptionPane.showMessageDialog(frame, "Error: No user selected!");
             showMainMenu();
@@ -136,6 +144,7 @@ public class GameLauncher {
         if (gameplayPanel != null) {
             gameplayPanel.cleanup();
         }
+        audioManager.shutdown();
         frame.dispose();
     }
 }
