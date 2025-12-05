@@ -398,8 +398,9 @@ public class UserManager {
             try {
                 getOrCreateLevelRecord(conn, saveId, levelNumber);
 
+                // ✅ UPDATE: Tambahkan score ke level_score yang sudah ada
                 String updateLevel = "UPDATE levels SET " +
-                            "level_score = level_score + ?, " + 
+                            "level_score = level_score + ?, " +  // <-- TAMBAH, bukan replace!
                             "is_completed = 1, " +
                             "temp_score = 0, " +
                             "current_round = 1 " +
@@ -412,6 +413,7 @@ public class UserManager {
                     ps.executeUpdate();
                 }
 
+                // ✅ Recalculate total score (sudah otomatis SUM semua level)
                 recalculateTotalScore(conn, saveId);
 
                 conn.commit();

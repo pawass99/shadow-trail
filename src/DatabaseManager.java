@@ -21,6 +21,5 @@ public class DatabaseManager {
     }
 
     public void close() {
-        // no-op without pooling
     }
 }
