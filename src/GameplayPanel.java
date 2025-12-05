@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -44,6 +45,12 @@ public class GameplayPanel extends JPanel {
     private ImageIcon pointDefaultIcon;
     private ImageIcon pointPressedIcon;
 
+    private Image baseDefaultImage;
+    private Image basePressedImage;
+    private Image baseHazardImage;
+    private Image basePointDefaultImage;
+    private Image basePointPressedImage;
+
     private final List<Point> pathPoints = new ArrayList<>();
     private Set<Point> hazards = new HashSet<>();
     private List<Point> endpoints = new ArrayList<>();
@@ -57,6 +64,8 @@ public class GameplayPanel extends JPanel {
         this.launcher = launcher;
         this.levelManager = levelManager;
         setLayout(new BorderLayout());
+
+        loadBaseImages();
 
         BackgroundPanel backgroundPanel = new BackgroundPanel("gameplay_bg.png");
         backgroundPanel.setLayout(new BorderLayout());
@@ -121,6 +130,8 @@ public class GameplayPanel extends JPanel {
         this.totalRounds = roundCount;
         this.currentUser = user;
         this.totalHazardTouches = 0;
+        this.paused = false;
+        this.isShowingDialog = false;
         
         int maxLevelInDB = levelManager.getMaxLevelInDatabase();
         int currentUnlockedLevel = Math.min(user.getUnlockedLevel(), maxLevelInDB);
@@ -324,11 +335,16 @@ public class GameplayPanel extends JPanel {
         gridPanel.setOpaque(false);
         gridPanel.setPreferredSize(new Dimension(620, 620));
 
-        defaultIcon = new ImageIcon("assets/tile_default.png");
-        pressedIcon = new ImageIcon("assets/tile_pressed.png");
-        hazardIcon = new ImageIcon("assets/tile_hazard.png");
-        pointDefaultIcon = new ImageIcon("assets/tilepoint_default.png");
-        pointPressedIcon = new ImageIcon("assets/tilepoint_pressed.png");
+        int gap = 2;
+        int gridSize = gridPanel.getPreferredSize().width;
+        int cellWidth = Math.max(1, (gridSize - (cols - 1) * gap) / cols);
+        int cellHeight = Math.max(1, (gridSize - (rows - 1) * gap) / rows);
+
+        defaultIcon = scaleIcon(baseDefaultImage, cellWidth, cellHeight);
+        pressedIcon = scaleIcon(basePressedImage, cellWidth, cellHeight);
+        hazardIcon = scaleIcon(baseHazardImage, cellWidth, cellHeight);
+        pointDefaultIcon = scaleIcon(basePointDefaultImage, cellWidth, cellHeight);
+        pointPressedIcon = scaleIcon(basePointPressedImage, cellWidth, cellHeight);
 
         tileButtons = new JButton[rows][cols];
         for (int r = 0; r < rows; r++) {
@@ -344,15 +360,39 @@ public class GameplayPanel extends JPanel {
         boardWrapper.repaint();
     }
 
-        private JButton createTileButton(int row, int col) {
-            JButton button = new JButton(defaultIcon);
-            button.setBorderPainted(false);
-            button.setContentAreaFilled(false);
-            button.setFocusPainted(false);
-            button.setMargin(new Insets(0, 0, 0, 0));
-            
-            button.addActionListener(tileClickHandler(row, col));
-            return button;
+    private void loadBaseImages() {
+        baseDefaultImage = loadImage("tile_default.png");
+        basePressedImage = loadImage("tile_pressed.png");
+        baseHazardImage = loadImage("tile_hazard.png");
+        basePointDefaultImage = loadImage("tilepoint_default.png");
+        basePointPressedImage = loadImage("tilepoint_pressed.png");
+    }
+
+    private Image loadImage(String fileName) {
+        File iconFile = new File("assets", fileName);
+        if (!iconFile.exists()) {
+            System.err.println("Icon not found: " + iconFile.getAbsolutePath());
+            return null;
+        }
+        return new ImageIcon(iconFile.getAbsolutePath()).getImage();
+    }
+
+    private ImageIcon scaleIcon(Image base, int width, int height) {
+        if (base == null || width <= 0 || height <= 0) {
+            return new ImageIcon();
+        }
+        return new ImageIcon(base.getScaledInstance(width, height, Image.SCALE_SMOOTH));
+    }
+
+    private JButton createTileButton(int row, int col) {
+        JButton button = new JButton(defaultIcon);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setMargin(new Insets(0, 0, 0, 0));
+        
+        button.addActionListener(tileClickHandler(row, col));
+        return button;
     }
 
     private ActionListener tileClickHandler(int row, int col) {
