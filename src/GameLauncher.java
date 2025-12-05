@@ -1,5 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class GameLauncher {
     private JFrame frame;
@@ -15,9 +15,10 @@ public class GameLauncher {
     private ContinuePanel continuePanel;
     private LevelBoardPanel levelBoardPanel;
     private GameplayPanel gameplayPanel;
+    private LeaderboardPanel leaderboardPanel;
 
     public GameLauncher() {
-        DatabaseManager databaseManager = new DatabaseManager(); // stubbed for now
+        DatabaseManager databaseManager = new DatabaseManager();
         this.userManager = new UserManager(databaseManager);
         this.levelManager = new LevelManager(databaseManager);
         applyGlobalFont();
@@ -57,12 +58,14 @@ public class GameLauncher {
         continuePanel = new ContinuePanel(this, userManager);
         levelBoardPanel = new LevelBoardPanel(this, levelManager);
         gameplayPanel = new GameplayPanel(this, levelManager);
+        leaderboardPanel = new LeaderboardPanel(this, userManager);
 
         rootPanel.add(mainMenuPanel, "mainMenu");
         rootPanel.add(newGamePanel, "newGame");
         rootPanel.add(continuePanel, "continue");
         rootPanel.add(levelBoardPanel, "levelBoard");
         rootPanel.add(gameplayPanel, "gameplay");
+        rootPanel.add(leaderboardPanel, "leaderboard");
     }
 
     public void showMainMenu() {
@@ -87,14 +90,52 @@ public class GameLauncher {
 
     public void showLevelBoardCurrent() {
         if (currentUser != null) {
-            showLevelBoard(currentUser);
+            User updatedUser = userManager.getUserById(currentUser.getId());
+            if (updatedUser != null) {
+                currentUser = updatedUser;
+                showLevelBoard(currentUser);
+            } else {
+                JOptionPane.showMessageDialog(frame, 
+                    "Save data tidak ditemukan. Kembali ke menu utama.");
+                currentUser = null;
+                showMainMenu();
+            }
         } else {
             showMainMenu();
         }
     }
 
+    public void showLeaderboard() {
+        leaderboardPanel.refreshLeaderboard();
+        cardLayout.show(rootPanel, "leaderboard");
+    }
+
     public void startGameplay(LevelConfig config, int roundCount) {
-        gameplayPanel.loadLevel(config, roundCount);
+        if (currentUser == null) {
+            JOptionPane.showMessageDialog(frame, "Error: No user selected!");
+            showMainMenu();
+            return;
+        }
+        gameplayPanel.loadLevel(config, roundCount, currentUser);
         cardLayout.show(rootPanel, "gameplay");
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    public LevelManager getLevelManager() {
+        return levelManager;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void shutdown() {
+        if (gameplayPanel != null) {
+            gameplayPanel.cleanup();
+        }
+        frame.dispose();
     }
 }

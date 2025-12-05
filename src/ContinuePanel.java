@@ -1,8 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
-import javax.swing.SwingWorker;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import javax.swing.*;
 
 public class ContinuePanel extends JPanel {
     private final GameLauncher launcher;
@@ -43,6 +40,11 @@ public class ContinuePanel extends JPanel {
         bg.add(buttons, BorderLayout.SOUTH);
 
         add(bg, BorderLayout.CENTER);
+    }
+
+    public void refreshUsers() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'refreshUsers'");
     }
 
 }
