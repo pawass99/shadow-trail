@@ -27,19 +27,18 @@ public class LevelManager {
 
     public LevelConfig loadLevel(int levelNumber) {
         String sql = "SELECT level_number, grid_rows, grid_cols, hazard_count, rounds " +
-                    "FROM level_configs WHERE level_number = ?";
+                "FROM level_configs WHERE level_number = ?";
         try (Connection conn = databaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, levelNumber);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new LevelConfig(
-                        rs.getInt("level_number"),
-                        rs.getInt("grid_rows"),
-                        rs.getInt("grid_cols"),
-                        rs.getInt("hazard_count"),
-                        rs.getInt("rounds")
-                    );
+                            rs.getInt("level_number"),
+                            rs.getInt("grid_rows"),
+                            rs.getInt("grid_cols"),
+                            rs.getInt("hazard_count"),
+                            rs.getInt("rounds"));
                 }
             }
         } catch (SQLException e) {
@@ -186,11 +185,11 @@ public class LevelManager {
     public List<LevelConfig> getAvailableLevels(User user) {
         List<LevelConfig> levels = new ArrayList<>();
         String sql = "SELECT level_number, grid_rows, grid_cols, hazard_count, rounds " +
-                    "FROM level_configs WHERE level_number <= ? ORDER BY level_number";
+                "FROM level_configs WHERE level_number <= ? ORDER BY level_number";
         int unlocked = Math.max(user.getUnlockedLevel(), 1);
 
         try (Connection conn = databaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, unlocked);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -211,11 +210,11 @@ public class LevelManager {
     public List<LevelConfig> getAllLevels() {
         List<LevelConfig> levels = new ArrayList<>();
         String sql = "SELECT level_number, grid_rows, grid_cols, hazard_count, rounds " +
-                    "FROM level_configs ORDER BY level_number";
+                "FROM level_configs ORDER BY level_number";
 
         try (Connection conn = databaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 levels.add(createLevelConfigFromResultSet(rs));
             }
@@ -232,12 +231,11 @@ public class LevelManager {
 
     private LevelConfig createLevelConfigFromResultSet(ResultSet rs) throws SQLException {
         return new LevelConfig(
-            rs.getInt("level_number"),
-            rs.getInt("grid_rows"),
-            rs.getInt("grid_cols"),
-            rs.getInt("hazard_count"),
-            rs.getInt("rounds")
-        );
+                rs.getInt("level_number"),
+                rs.getInt("grid_rows"),
+                rs.getInt("grid_cols"),
+                rs.getInt("hazard_count"),
+                rs.getInt("rounds"));
     }
 
     public int getRoundCount(int levelNumber) {
@@ -245,16 +243,16 @@ public class LevelManager {
     }
 
     public int getMaxLevelInDatabase() {
-    String sql = "SELECT MAX(level_number) as max_level FROM level_configs";
-    try (Connection conn = databaseManager.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-            return rs.getInt("max_level");
+        String sql = "SELECT MAX(level_number) as max_level FROM level_configs";
+        try (Connection conn = databaseManager.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("max_level");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return 1;
     }
-    return 1; // Default jika gagal
-}
 }

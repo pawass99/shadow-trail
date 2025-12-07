@@ -37,7 +37,7 @@ public class LeaderboardPanel extends JPanel {
         BackgroundPanel bg = new BackgroundPanel("gameplay_bg.png");
         bg.setLayout(new BorderLayout());
         bg.setBorder(BorderFactory.createEmptyBorder(
-            PANEL_PADDING, PANEL_SIDE_PADDING, PANEL_SIDE_PADDING, PANEL_SIDE_PADDING));
+                PANEL_PADDING, PANEL_SIDE_PADDING, PANEL_SIDE_PADDING, PANEL_SIDE_PADDING));
 
         JLabel title = createTitleLabel();
         bg.add(title, BorderLayout.NORTH);
@@ -52,11 +52,11 @@ public class LeaderboardPanel extends JPanel {
     }
 
     private JLabel createTitleLabel() {
-        JLabel title = new JLabel("🏆 LEADERBOARD 🏆", SwingConstants.CENTER);
+        JLabel title = new JLabel("LEADERBOARD", SwingConstants.CENTER);
         title.setFont(title.getFont().deriveFont(Font.BOLD, (float) TITLE_FONT_SIZE));
         title.setForeground(TITLE_COLOR);
         title.setBorder(BorderFactory.createEmptyBorder(
-            TITLE_PADDING, 0, TITLE_BOTTOM_PADDING, 0));
+                TITLE_PADDING, 0, TITLE_BOTTOM_PADDING, 0));
         return title;
     }
 
@@ -76,7 +76,7 @@ public class LeaderboardPanel extends JPanel {
         buttons.setOpaque(false);
 
         CustomImageButton back = new CustomImageButton(
-            "assets/back.png", "assets/backh.png", "assets/backp.png");
+                "assets/back.png", "assets/backh.png", "assets/backp.png");
         back.addActionListener(e -> launcher.showMainMenu());
         buttons.add(back);
 
@@ -103,7 +103,7 @@ public class LeaderboardPanel extends JPanel {
                     }
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(LeaderboardPanel.this,
-                        "Gagal memuat leaderboard: " + ex.getMessage());
+                            "Gagal memuat leaderboard: " + ex.getMessage());
                 }
                 listPanel.revalidate();
                 listPanel.repaint();

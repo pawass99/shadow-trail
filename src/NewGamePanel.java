@@ -41,7 +41,7 @@ public class NewGamePanel extends JPanel {
         JPanel card = new JPanel();
         card.setOpaque(false);
         card.setBorder(BorderFactory.createEmptyBorder(
-            CARD_PADDING, CARD_HORIZONTAL_PADDING, CARD_PADDING, CARD_HORIZONTAL_PADDING));
+                CARD_PADDING, CARD_HORIZONTAL_PADDING, CARD_PADDING, CARD_HORIZONTAL_PADDING));
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 
         JLabel title = createTitleLabel();
@@ -92,7 +92,7 @@ public class NewGamePanel extends JPanel {
 
     private JButton createStartButton() {
         CustomImageButton button = new CustomImageButton(
-            "assets/cn.png", "assets/cnh.png", "assets/cnp.png");
+                "assets/cn.png", "assets/cnh.png", "assets/cnp.png");
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(e -> handleCreate());
         return button;
@@ -100,7 +100,7 @@ public class NewGamePanel extends JPanel {
 
     private CustomImageButton createBackButton() {
         CustomImageButton button = new CustomImageButton(
-            "assets/back.png", "assets/backh.png", "assets/backp.png");
+                "assets/back.png", "assets/backh.png", "assets/backp.png");
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(e -> launcher.showMainMenu());
         return button;
@@ -132,16 +132,14 @@ public class NewGamePanel extends JPanel {
                     } else {
                         String err = userManager.getLastError();
                         JOptionPane.showMessageDialog(NewGamePanel.this,
-                            "Gagal membuat save: " + (err != null ? err : "Unknown error"));
+                                "Gagal membuat save: " + (err != null ? err : "Unknown error"));
                     }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(NewGamePanel.this, 
-                        "Gagal membuat save: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(NewGamePanel.this,
+                            "Gagal membuat save: " + ex.getMessage());
                 }
             }
         }.execute();
     }
 
-    public void refreshUsers() {
-    }
 }

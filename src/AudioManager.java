@@ -56,12 +56,11 @@ public class AudioManager implements Runnable {
                     loadClipIfNeeded();
 
                     if (menuMusicClip != null) {
-                        if (menuMusicClip.isRunning()) {
-                            menuMusicClip.stop();
+                        if (!menuMusicClip.isRunning()) {
+                            menuMusicClip.setFramePosition(0);
+                            menuMusicClip.loop(Clip.LOOP_CONTINUOUSLY);
+                            menuMusicClip.start();
                         }
-                        menuMusicClip.setFramePosition(0);
-                        menuMusicClip.loop(Clip.LOOP_CONTINUOUSLY);
-                        menuMusicClip.start();
                     }
                     playRequested = false;
                 }
@@ -69,7 +68,7 @@ public class AudioManager implements Runnable {
                 try {
                     Thread.sleep(300);
                 } catch (InterruptedException ignored) {
-                    // allow loop to check flags
+                    //
                 }
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
